@@ -18,24 +18,23 @@ static struct etimer timer;
 
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(default_app_process, ev, data) {
-   	PROCESS_BEGIN();
+  PROCESS_BEGIN();
 
   SENSORS_ACTIVATE(acc_sensor);
   SENSORS_ACTIVATE(gyro_sensor);
    	
-   etimer_set(&timer, CLOCK_SECOND * 0.05);
+  etimer_set(&timer, CLOCK_SECOND * 0.05);
 
-   	
-    while (1) { 
-	    PROCESS_YIELD();
-		if ( etimer_expired(&timer) ) {
-            etimer_set(&timer, CLOCK_SECOND);
+  while (1) { 
+    PROCESS_YIELD();
+    if ( etimer_expired(&timer) ) {
+       etimer_set(&timer, CLOCK_SECOND*0.5);
 
-            printf("Lage: X: %d, Y: %d, Z: %d. ",gyro_sensor.value(GYRO_X), gyro_sensor.value(GYRO_Y), gyro_sensor.value(GYRO_Z));
-            printf("Beschl.: X: %d, Y: %d, Z: %d.\n",acc_sensor.value(ACC_X_RAW), acc_sensor.value(ACC_Y_RAW), acc_sensor.value(ACC_Z_RAW));
+       printf("Lage: X: %d, Y: %d, Z: %d. ",gyro_sensor.value(GYRO_X), gyro_sensor.value(GYRO_Y), gyro_sensor.value(GYRO_Z));
+       printf("Beschl.: X: %d, Y: %d, Z: %d.\n",acc_sensor.value(ACC_X_RAW), acc_sensor.value(ACC_Y_RAW), acc_sensor.value(ACC_Z_RAW));
 
-        }
-    }
-    PROCESS_END();
+       }
+  }
+  PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
