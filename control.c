@@ -23,32 +23,36 @@ PROCESS_THREAD(default_app_process, ev, data) {
   PROCESS_BEGIN();
 
   SENSORS_ACTIVATE(acc_sensor);
-  SENSORS_ACTIVATE(gyro_sensor);
+  //SENSORS_ACTIVATE(gyro_sensor);
    	
   etimer_set(&timer, CLOCK_SECOND * 0.05);
 
   while (1) { 
     PROCESS_YIELD();
     if ( etimer_expired(&timer) ) {
-      etimer_set(&timer, CLOCK_SECOND*0.5);
-      #if CONTROL == 0 
-      packetbuf_copyfrom(CROSS, 2);
-      broadcast_send(&broadcast);
-      printf("%d: CROSS\n", CONTROL);  
-      #elif CONTROL == 1
-      packetbuf_copyfrom(CIRCLE, 2);
-      broadcast_send(&broadcast);
-      printf("%d: CIRCLE\n", CONTROL);
-      #elif CONTROL == 2
-      packetbuf_copyfrom(TRIANGLE, 2);
-      broadcast_send(&broadcast);
-      printf("%d: TRIANGLE\n", CONTROL);
-      #elif CONTROL == 3
-      packetbuf_copyfrom(SQUARE, 2);
-      broadcast_send(&broadcast);
-      printf("%d: SQUARE\n", CONTROL); 
-      #endif
- 
+      etimer_set(&timer, CLOCK_SECOND*0.05);
+      x = acc_sensor.value(ACC_Y_RAW);
+      if (x > 380) {
+        #if CONTROL == 0 
+        packetbuf_copyfrom("0", 2);
+        broadcast_send(&broadcast);
+        printf("%d: CROSS Nr.%d\n", CONTROL, count);  
+        #elif CONTROL == 1
+        packetbuf_copyfrom("1", 2);
+        broadcast_send(&broadcast);
+        printf("%d: CIRCLE Nr.%d\n", CONTROL, count);
+        #elif CONTROL == 2
+        packetbuf_copyfrom("2", 2);
+        broadcast_send(&broadcast);
+        printf("%d: TRIANGLE Nr.%d\n", CONTROL, count);
+        #elif CONTROL == 3
+        packetbuf_copyfrom("3", 2);
+        broadcast_send(&broadcast);
+        printf("%d: SQUARE Nr.%d\n", CONTROL, count); 
+        #endif
+        etimer_set(&timer, CLOCK_SECOND*0.3);
+        count++;
+      } 
     }
   PROCESS_END();
   }
