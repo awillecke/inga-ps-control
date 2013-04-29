@@ -35,9 +35,10 @@ PROCESS_THREAD(default_app_process, ev, data) {
 
 //       printf("Lage: X: %4d, Y: %4d, Z: %4d. ",gyro_sensor.value(GYRO_X_RAW), gyro_sensor.value(GYRO_Y_RAW), gyro_sensor.value(GYRO_Z_RAW));
 //       printf("Beschl.: X: %6d, Y: %6d, Z: %6d.\n",acc_sensor.value(ACC_X_RAW), acc_sensor.value(ACC_Y_RAW), acc_sensor.value(ACC_Z_RAW));
-         x = acc_sensor.value(ACC_X_RAW);
-         if (x > 400) {
-           printf("BOX!!! nr %d over 400\n", count);
+         x = acc_sensor.value(ACC_Y_RAW);
+         if (x > 500) {
+           printf("BOX!!! nr %d over 500\n", count);
+           etimer_set(&timer, CLOCK_SECOND*0.5);
            count++;
          }
        }
