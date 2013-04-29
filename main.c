@@ -6,7 +6,7 @@
 #include "gyro-sensor.h"
 #include "pressure-sensor.h"
 
-
+// Hallo Alex
 #define DEBUG                                   0
 
 #include <stdio.h> /* For printf() */
