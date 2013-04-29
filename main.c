@@ -30,8 +30,8 @@ PROCESS_THREAD(default_app_process, ev, data) {
     if ( etimer_expired(&timer) ) {
        etimer_set(&timer, CLOCK_SECOND*0.5);
 
-       printf("Lage: X: %d, Y: %d, Z: %d. ",gyro_sensor.value(GYRO_X), gyro_sensor.value(GYRO_Y), gyro_sensor.value(GYRO_Z));
-       printf("Beschl.: X: %d, Y: %d, Z: %d.\n",acc_sensor.value(ACC_X_RAW), acc_sensor.value(ACC_Y_RAW), acc_sensor.value(ACC_Z_RAW));
+       printf("Lage: X: %d, Y: %d, Z: %d. ",gyro_sensor.value(GYRO_X_RAW), gyro_sensor.value(GYRO_Y_RAW), gyro_sensor.value(GYRO_Z_RAW));
+       printf("Beschl.: X: %d, Y: %d, Z: %d.\n",acc_sensor.value(ACC_X), acc_sensor.value(ACC_Y), acc_sensor.value(ACC_Z));
 
        }
   }
