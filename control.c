@@ -31,25 +31,22 @@ PROCESS_THREAD(default_app_process, ev, data) {
     PROCESS_YIELD();
     if ( etimer_expired(&timer) ) {
       etimer_set(&timer, CLOCK_SECOND*0.5);
-      #ifdef CONTROL == 0 
+      #if CONTROL == 0 
       packetbuf_copyfrom(CROSS, 2);
       broadcast_send(&broadcast);
-      printf("%d\n", CONTROL);  
-      #endif
-      #ifdef CONTROL == 1
+      printf("%d: CROSS\n", CONTROL);  
+      #elif CONTROL == 1
       packetbuf_copyfrom(CIRCLE, 2);
       broadcast_send(&broadcast);
-      printf("%d\n", CONTROL); 
-      #endif
-      #ifdef CONTROL == 2
+      printf("%d: CIRCLE\n", CONTROL);
+      #elif CONTROL == 2
       packetbuf_copyfrom(TRIANGLE, 2);
       broadcast_send(&broadcast);
-      printf("%d\n", CONTROL); 
-      #endif
-      #ifdef CONTROL == 3
+      printf("%d: TRIANGLE\n", CONTROL);
+      #elif CONTROL == 3
       packetbuf_copyfrom(SQUARE, 2);
       broadcast_send(&broadcast);
-      printf("%d\n", CONTROL); 
+      printf("%d: SQUARE\n", CONTROL); 
       #endif
  
     }
