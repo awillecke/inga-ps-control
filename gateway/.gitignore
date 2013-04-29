@@ -18,5 +18,10 @@
 
 #inga zeug
 ./obj_inga/
+./gateway/obj_inga
+./gateway/main.inga
 main.inga
 Makefile.target
+
+#temporaray files
+*~

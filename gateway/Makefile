@@ -8,5 +8,5 @@ endif
 
 TARGET=inga
 
-CONTIKI = ../contiki
+CONTIKI = ../../contiki
 include $(CONTIKI)/Makefile.include
