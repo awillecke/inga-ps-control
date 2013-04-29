@@ -15,3 +15,8 @@
 *.exe
 *.out
 *.app
+
+#inga zeug
+./obj_inga/
+main.inga
+Makefile.target

@@ -15,7 +15,7 @@ PROCESS(default_app_process, "Hello world process");
 AUTOSTART_PROCESSES(&default_app_process);
  
 static struct etimer timer;
-static int16_t x = 0;
+static int16_t x, y, z = 0;
 static int count = 0;
 
 /*---------------------------------------------------------------------------*/
@@ -36,7 +36,9 @@ PROCESS_THREAD(default_app_process, ev, data) {
 //       printf("Lage: X: %4d, Y: %4d, Z: %4d. ",gyro_sensor.value(GYRO_X_RAW), gyro_sensor.value(GYRO_Y_RAW), gyro_sensor.value(GYRO_Z_RAW));
 //       printf("Beschl.: X: %6d, Y: %6d, Z: %6d.\n",acc_sensor.value(ACC_X_RAW), acc_sensor.value(ACC_Y_RAW), acc_sensor.value(ACC_Z_RAW));
          x = acc_sensor.value(ACC_X_RAW);
-         if (x > 400) {
+         y = acc_sensor.value(ACC_Y_RAW);
+         z = acc_sensor.value(ACC_Z_RAW);
+         if ((x > 400) || (y > 400) || (z > 400)) {
            printf("BOX!!! nr %d over 400\n", count);
            count++;
          }
