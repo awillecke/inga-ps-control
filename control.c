@@ -18,7 +18,7 @@ static int count = 0;
 PROCESS_THREAD(default_app_process, ev, data) {
 
   PROCESS_EXITHANDLER(broadcast_close(&broadcast);)
-  broadcast_open(&broadcast, 129, &broadcast_call);
+  broadcast_open(&broadcast, 22, &broadcast_call);
 
   PROCESS_BEGIN();
 
