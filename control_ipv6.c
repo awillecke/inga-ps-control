@@ -1,6 +1,9 @@
 #include "control.h"
 #include "contiki-net.h"
 #include "settings.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 
 #include "node-id.h"
 
@@ -22,7 +25,10 @@ static struct uip_udp_conn *client_conn;
 
 /*---------------------------------------------------------------------------*/
 static void udp_send_data(void) {
-    uip_udp_packet_send(client_conn, (char *)CONTROL, 2/*strlen(buf)*/);
+    char buffer[2];
+     itoa((int)CONTROL,buffer,10);
+     uip_udp_packet_send(client_conn, buffer, 2/*strlen(buf)*/);
+     printf("Sende Daten: %s\n", buffer);
 }
 /*---------------------------------------------------------------------------*/
 
@@ -45,13 +51,14 @@ static void print_local_addresses(void) {
 /*---------------------------------------------------------------------------*/
 static void set_connection_address(uip_ipaddr_t *ipaddr) {
     //fe80::f00:22ff:fe33:4455 is node 13
-    if (node_id == 12)
-        uip_ip6addr(ipaddr,0xfe80,0,0,0,0xf00,0x22ff,0xfe33,0x4455);
+    //if (node_id == 12)
+    //    uip_ip6addr(ipaddr,0xfe80,0,0,0,0xf00,0x22ff,0xfe33,0x4455);
     //fe80::e00:22ff:fe33:4455 is node 12
-    else if (node_id == 13)
-        uip_ip6addr(ipaddr,0xfe80,0,0,0,0xe00,0x22ff,0xfe33,0x4455);
-     else
-        printf("No destiniation!");
+    //else if (node_id == 13)
+    //    uip_ip6addr(ipaddr,0xfe80,0,0,0,0xe00,0x22ff,0xfe33,0x4455);
+    // else
+    //    printf("No destiniation!");
+    uip_ip6addr(ipaddr,0xfe80,0,0,0,0x3301,0x22ff,0xfe33,0x4455);
 }
 
 static void print_control() {
@@ -88,7 +95,7 @@ PROCESS_THREAD(default_app_process, ev, data) {
     SENSORS_ACTIVATE(acc_sensor);
     etimer_set(&timer, CLOCK_SECOND * 0.05);
     
-    printf("Note configured as ");
+    printf("Node configured as ");
     print_control();
     printf("\n");
     
