@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "net/uip-debug.h"
+#define DEBUG_PRINT 1
 #define DEBUG DEBUG_PRINT
 #define UIP_IP_BUF   ((struct uip_ip_hdr *)&uip_buf[UIP_LLH_LEN])
 
@@ -23,8 +24,8 @@ static struct etimer timer;
 
 static void udp_receive_data(void) {
     if(uip_newdata()) {
-        printf("Empfange Packet");
-        recv = atoi((char *)uip_appdata);       
+        recv = atoi((char *)uip_appdata);
+        printf("Empfange Packet: %d\n", recv);       
     }
 }
 
@@ -58,22 +59,26 @@ PROCESS_THREAD(gateway, ev, data) {
 
     while(1) {
         PROCESS_YIELD();
+        //printf("back\n");
         if(ev == tcpip_event) {
+            //printf("tcp event\n");
             udp_receive_data();
 
             if (recv == 2) {  //TRI
                 PORTA &= ~(1<<PA0);
+                //PORTA |= (1<<PA0);
                 printf("SETTING IO\n");
-                etimer_set(&timer, CLOCK_SECOND*0.02);//0.05);
+                etimer_set(&timer, CLOCK_SECOND*0.01);//0.05);
                 PROCESS_YIELD();
                 printf("UNSET IO\n");
                 PORTA |= (1<<PA0);
+                //PORTA &= ~(1<<PA0);
                 recv = 0;
             } 
             else if (recv == 3) {  //SQUARE
                 PORTA &= ~(1<<PA1);   
                 printf("SETTING IO\n");
-                etimer_set(&timer, CLOCK_SECOND*0.02);//0.05);
+                etimer_set(&timer, CLOCK_SECOND*0.01);//0.05);
                 PROCESS_YIELD();
                 printf("UNSET IO\n");
                 PORTA |= (1<<PA1);  
