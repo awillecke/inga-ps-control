@@ -23,16 +23,19 @@
 #define CIRCLE 1
 #define TRIANGLE 2
 #define SQUARE 3
-#define UP 4
-#define DOWN 5
-#define LEFT 6
-#define RIGHT 7
-#define L1 8
-#define L2 9
-#define R1 10
-#define R2 11
-#define START 12
-#define SELECT 13
+#define START 4
+#define SELECT 5
+#define BUTTON_6 6
+#define MOVE_CONTROL 7
+ 
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
+#define L1 4
+#define L2 5
+#define R1 6
+#define R2 7
 
 #define BUTTON_HOLD 0.05
 
@@ -43,4 +46,4 @@
 #define IC1_ADDR_W 0b01000000
 #define IC2_ADDR_W 0b01001110
 
-int set_button(uint8_t output);
+int set_control(uint8_t output);
