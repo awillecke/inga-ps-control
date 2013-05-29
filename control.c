@@ -78,6 +78,8 @@ PROCESS_THREAD(default_app_process, ev, data) {
     #endif
 
     printf("CONTROL: %d Button_byte: %d\n", CONTROL, button_byte);    
+    
+    etimer_set(&timer, CLOCK_SECOND * 0.05);
         
     while (1) { 
         PROCESS_YIELD();
@@ -97,7 +99,8 @@ PROCESS_THREAD(default_app_process, ev, data) {
             
             y_acc = acc_sensor.value(ACC_Y_RAW);
             if (y_acc > 380) { 
-                udp_send_data(CONTROL);
+                printf("trigger");
+                udp_send_data((uint8_t)CONTROL);
                 etimer_set(&timer, CLOCK_SECOND*0.1);
             }
         }
