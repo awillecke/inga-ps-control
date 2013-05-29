@@ -38,8 +38,7 @@ PROCESS_THREAD(gateway, ev, data) {
     
     set_control(0);
     set_control(0);
-    
-    
+     
     print_local_addresses();
 
     server_conn = udp_new(NULL, UIP_HTONS(3003), NULL);
