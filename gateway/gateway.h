@@ -23,19 +23,22 @@
 #define CIRCLE 1
 #define TRIANGLE 2
 #define SQUARE 3
-#define START 4
-#define SELECT 5
-#define BUTTON_6 6
+//#define START 4
+//#define SELECT 5
+//#define BUTTON_6 6
 #define MOVE_CONTROL 7
  
+
+//Movement
 #define UP 0
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
-#define L1 4
-#define L2 5
-#define R1 6
-#define R2 7
+#define START 4
+#define SELECT 5
+//#define R1 6
+//#define R2 7
+
 
 #define BUTTON_HOLD 0.05
 
