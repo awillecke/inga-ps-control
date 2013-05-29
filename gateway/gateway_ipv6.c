@@ -1,19 +1,4 @@
-#include "contiki.h"
-#include "contiki-net.h"
-#include "settings.h"
-#include "node-id.h"
-#include <string.h>
-
-#include "avr/portpins.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "net/uip-debug.h"
-#define DEBUG_PRINT 1
-#define DEBUG DEBUG_PRINT
-#define UIP_IP_BUF   ((struct uip_ip_hdr *)&uip_buf[UIP_LLH_LEN])
-
+#include "gateway.h"
 /*---------------------------------------------------------------------------*/
 PROCESS(gateway, "gateway main processs");
 AUTOSTART_PROCESSES(&gateway);
@@ -42,7 +27,6 @@ static void print_local_addresses(void) {
         }
     }
 }
-
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(gateway, ev, data) {
      
@@ -88,4 +72,37 @@ PROCESS_THREAD(gateway, ev, data) {
     }  
     PROCESS_END();
 }
-/*---------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------*/
+int set_button(uint16_t output)
+{
+    uint8_t ret,            
+            ic1 = (uint8_t)output,
+            ic2 = (uint8_t)(output >> 8);
+    
+    printf("ic1: %d, ic2: %d\n", ic1, ic2);
+   
+    i2c_init();
+
+    if(i2c_start(IC1_ADDR_W))
+    {
+        ret = i2c_write(output);
+    }
+    else
+    {
+        printf("i2c_start failed: IC1\n");
+    }
+
+    i2c_stop();
+    
+    if(i2c_start(IC2_ADDR_W))
+    {
+        ret = i2c_write(output);
+    }
+    else
+    {
+        printf("i2c_start failed: IC2\n");
+    }    
+  
+  return ret;     
+}
+/*--------------------------------------------------------------------------------------*/
