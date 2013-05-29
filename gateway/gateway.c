@@ -1,71 +1,80 @@
-#include "contiki.h"
-#include "net/rime.h"
-#include "random.h"
-#include <string.h>
-
-#include "dev/button-sensor.h"
-#include "avr/portpins.h"
-
-#include "dev/leds.h"
-
-#include <stdio.h>
+#include "gateway.h"
 /*---------------------------------------------------------------------------*/
-PROCESS(example_broadcast_process, "Broadcast example");
-AUTOSTART_PROCESSES(&example_broadcast_process);
+PROCESS(gateway, "gateway main processs");
+AUTOSTART_PROCESSES(&gateway);
 /*---------------------------------------------------------------------------*/
-static struct etimer et;
+static struct uip_udp_conn *server_conn;
+static int recv;
 static struct etimer timer;
-static struct etimer recvtimer;
-static int recv = 0;
-static void broadcast_recv(struct broadcast_conn *c, const rimeaddr_t *from) {
-   printf("broadcast message received from %d.%d: '%s'\n", from->u8[0], from->u8[1], (char *)packetbuf_dataptr());
-   recv = atoi((char *)packetbuf_dataptr());
-   //printf("%d\n",recv);
-   etimer_set(&recvtimer, CLOCK_SECOND*0.01);
+
+static void udp_receive_data(void) {
+    if(uip_newdata()) {
+        recv = atoi((char *)uip_appdata);
+        printf("Empfange Packet: %d\n", recv);      
+        set_control(recv); 
+    }
 }
-static const struct broadcast_callbacks broadcast_call = {broadcast_recv};
-static struct broadcast_conn broadcast;
+
+static void print_local_addresses(void) {
+    int i;
+    uint8_t state;
+    PRINTF("Server IPv6 addresses: ");
+    for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
+        state = uip_ds6_if.addr_list[i].state;
+        if(uip_ds6_if.addr_list[i].isused && (state == ADDR_TENTATIVE || state == ADDR_PREFERRED)) {
+          PRINT6ADDR(&uip_ds6_if.addr_list[i].ipaddr);
+          PRINTF("\n");
+        }
+    }
+}
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(example_broadcast_process, ev, data) {
-    
-    PROCESS_EXITHANDLER(broadcast_close(&broadcast);)
-    
-    PORTA = 0b00000011;
-    DDRA = 0b00000011;
+PROCESS_THREAD(gateway, ev, data) {
   
     PROCESS_BEGIN();
 
-    broadcast_open(&broadcast, 22, &broadcast_call);
-    etimer_set(&et, CLOCK_SECOND*2);//0.05);
-                
+    i2c_init();
+    
+    set_control(0);
+    set_control(0);
+    
+    
+    print_local_addresses();
+
+    server_conn = udp_new(NULL, UIP_HTONS(3003), NULL);
+    udp_bind(server_conn, UIP_HTONS(3002));
+
     while(1) {
-        PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-        //printf("end yield\n");
-        //if(!(ev == timer)) {
-            if (recv == 2) {  //TRI
-                PORTA &= ~(1<<PA0);
-                printf("SETTING IO\n");
-                etimer_set(&timer, CLOCK_SECOND*0.02);//0.05);
-                PROCESS_YIELD();
-                printf("UNSET IO\n");
-                PORTA |= (1<<PA0);
-                recv = 0;
-            } 
-            else if (recv == 3) {  //SQUARE
-                PORTA &= ~(1<<PA1);   
-                printf("SETTING IO\n");
-                etimer_set(&timer, CLOCK_SECOND*0.02);//0.05);
-                PROCESS_YIELD();
-                printf("UNSET IO\n");
-                PORTA |= (1<<PA1);  
-                recv = 0;
-            }      
-         //}
-         etimer_set(&et, CLOCK_SECOND*0.01);//0.05);
-                
+        PROCESS_YIELD();
+        if(ev == tcpip_event) {
+            udp_receive_data();
+         }  
     }  
     PROCESS_END();
 }
-/*---------------------------------------------------------------------------*/
-/*
- */
+/*--------------------------------------------------------------------------------------*/
+int set_control(uint8_t output) {
+
+    uint8_t ret = -1;
+
+    if (((output & 0b10000000) >> MOVE_CONTROL) == 0) {
+        if(i2c_start(IC1_ADDR_W) == 0) {
+            ret = i2c_write(output);
+            i2c_stop();
+        } 
+        else {
+            printf("i2c_start failed: IC1\n");
+        }
+    }
+    else {
+        if(i2c_start(IC2_ADDR_W) == 0) {
+            ret = i2c_write(output);
+            i2c_stop();
+        } 
+        else {
+            printf("i2c_start failed: IC2\n");
+        }
+    }
+    
+    return ret;     
+}
+/*--------------------------------------------------------------------------------------*/
