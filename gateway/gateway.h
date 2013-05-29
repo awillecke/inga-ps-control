@@ -12,6 +12,7 @@
 #include <string.h>
 #include "avr/portpins.h"
 #include "net/uip-debug.h"
+#include <i2c.h>
 
 #define DEBUG_PRINT 1
 #define DEBUG DEBUG_PRINT
@@ -33,6 +34,7 @@
 #define START 12
 #define SELECT 13
 
+#define BUTTON_HOLD 0.05
 
 #define CONTROL 13
 
@@ -41,4 +43,4 @@
 #define IC1_ADDR_W 0b01000000
 #define IC2_ADDR_W 0b01001110
 
-int set_button(uint16_t output);
+int set_button(uint8_t output);
