@@ -112,13 +112,13 @@ PROCESS_THREAD(button_hold, ev, data) {
         if (etimer_expired(&button_timer[0])) {
             set_control((1 << CROSS));
         }
-        if (etimer_expired(&button_timer[1])) {
+        else if (etimer_expired(&button_timer[1])) {
             set_control((1 << CIRCLE));
         }
-        if (etimer_expired(&button_timer[2])) {
+        else if (etimer_expired(&button_timer[2])) {
             set_control((1 << TRIANGLE));
         }
-        if (etimer_expired(&button_timer[3])) {
+        else if (etimer_expired(&button_timer[3])) {
             set_control((1 << SQUARE));
         }
     }
