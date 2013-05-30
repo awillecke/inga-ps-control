@@ -49,4 +49,4 @@
 #define IC1_ADDR_W 0b01000000
 #define IC2_ADDR_W 0b01001110
 
-int set_control(uint8_t output);
+static int set_control(uint8_t output);

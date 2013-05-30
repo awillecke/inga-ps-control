@@ -1,14 +1,17 @@
 #include "gateway.h"
 /*---------------------------------------------------------------------------*/
 PROCESS(gateway, "gateway main processs");
-AUTOSTART_PROCESSES(&gateway);
+PROCESS(button_hold, "unsets buttons");
+AUTOSTART_PROCESSES(&gateway, &button_hold);
 /*---------------------------------------------------------------------------*/
 static uint8_t bit_mask_buttons = 0b11111111;
 static uint8_t bit_mask_movement = 0b11111111;
 
 static struct uip_udp_conn *server_conn;
 static int recv;
-static struct etimer timer;
+//static struct etimer timer;
+static struct etimer button_timer[4];
+
 
 static void udp_receive_data(void) {
     if(uip_newdata()) {
@@ -28,6 +31,49 @@ static void print_local_addresses(void) {
           PRINTF("\n");
         }
     }
+}
+
+static int set_control(uint8_t output) {
+
+    uint8_t ret = -1;
+    if (((output & 0b10000000) >> MOVE_CONTROL) == 0) {
+        bit_mask_buttons ^= output;
+        
+        if(i2c_start(IC1_ADDR_W) == 0) {
+            ret = i2c_write(bit_mask_buttons);
+            //start button_timer
+            etimer_set(&button_timer[log2(output)], CLOCK_SECOND*BUTTON_HOLD);
+            
+            i2c_stop();
+        } 
+        else {
+            printf("i2c_start failed: IC1\n");
+        }
+    }
+    else {
+        bit_mask_movement ^= output;
+        
+        if(i2c_start(IC2_ADDR_W) == 0) {
+            ret = i2c_write(bit_mask_movement);
+            i2c_stop();
+        } 
+        else {
+            printf("i2c_start failed: IC2\n");
+        }
+    }
+    
+    return ret;     
+}
+
+static uint8_t log2(uint8_t n) {
+    if (n == 0 && n <= 255)
+        return -1;
+    uint8_t value = -1;
+    while (n) {
+        value++;
+        n >>= 1;
+    }
+    return value;
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(gateway, ev, data) {
@@ -50,42 +96,34 @@ PROCESS_THREAD(gateway, ev, data) {
             udp_receive_data();
             
             set_control(recv); 
-            etimer_set(&timer, CLOCK_SECOND*BUTTON_HOLD);
-            PROCESS_YIELD();
-            set_control(recv);
+            //etimer_set(&timer, CLOCK_SECOND*BUTTON_HOLD);
+            //PROCESS_YIELD();
+            //set_control(recv);
             recv = 0;
          }  
     }  
     PROCESS_END();
 }
-/*--------------------------------------------------------------------------------------*/
-int set_control(uint8_t output) {
 
-    uint8_t ret = -1;
-
-    if (((output & 0b10000000) >> MOVE_CONTROL) == 0) {
-        bit_mask_buttons ^= output;
-        
-        if(i2c_start(IC1_ADDR_W) == 0) {
-            ret = i2c_write(bit_mask_buttons);
-            i2c_stop();
-        } 
-        else {
-            printf("i2c_start failed: IC1\n");
+PROCESS_THREAD(button_hold, ev, data) {
+    PROCESS_BEGIN();
+    while (1) {
+        PROCESS_YIELD();
+        if (etimer_expired(&button_timer[0])) {
+            set_control((1 << CROSS));
+        }
+        if (etimer_expired(&button_timer[1])) {
+            set_control((1 << CIRCLE));
+        }
+        if (etimer_expired(&button_timer[2])) {
+            set_control((1 << TRIANGLE));
+        }
+        if (etimer_expired(&button_timer[3])) {
+            set_control((1 << SQUARE));
         }
     }
-    else {
-        bit_mask_movement ^= output;
-        
-        if(i2c_start(IC2_ADDR_W) == 0) {
-            ret = i2c_write(bit_mask_movement);
-            i2c_stop();
-        } 
-        else {
-            printf("i2c_start failed: IC2\n");
-        }
-    }
-    
-    return ret;     
+    PROCESS_END();
 }
+/*--------------------------------------------------------------------------------------*/
+
 /*--------------------------------------------------------------------------------------*/
