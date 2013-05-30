@@ -7,19 +7,18 @@ AUTOSTART_PROCESSES(&gateway, &button_hold);
 static uint8_t bit_mask_buttons = 0b11111111;
 static uint8_t bit_mask_movement = 0b11111111;
 
+static uint8_t recv;
+
 static struct uip_udp_conn *server_conn;
-static int recv;
-//static struct etimer timer;
 static struct etimer button_timer[4];
-
-
+/*--------------------------------------------------------------------------------------*/
 static void udp_receive_data(void) {
     if(uip_newdata()) {
         recv = atoi((char *)uip_appdata);
         printf("Empfange Packet: %d\n", recv);
     }
 }
-
+/*--------------------------------------------------------------------------------------*/
 static void print_local_addresses(void) {
     int i;
     uint8_t state;
@@ -32,7 +31,7 @@ static void print_local_addresses(void) {
         }
     }
 }
-
+/*--------------------------------------------------------------------------------------*/
 static int set_control(uint8_t output) {
 
     uint8_t ret = -1;
@@ -64,7 +63,7 @@ static int set_control(uint8_t output) {
     
     return ret;     
 }
-
+/*--------------------------------------------------------------------------------------*/
 static uint8_t log2(uint8_t n) {
     if (n == 0 && n <= 255)
         return -1;
@@ -96,15 +95,12 @@ PROCESS_THREAD(gateway, ev, data) {
             udp_receive_data();
             
             set_control(recv); 
-            //etimer_set(&timer, CLOCK_SECOND*BUTTON_HOLD);
-            //PROCESS_YIELD();
-            //set_control(recv);
             recv = 0;
          }  
     }  
     PROCESS_END();
 }
-
+/*--------------------------------------------------------------------------------------*/
 PROCESS_THREAD(button_hold, ev, data) {
     PROCESS_BEGIN();
     while (1) {
@@ -124,6 +120,4 @@ PROCESS_THREAD(button_hold, ev, data) {
     }
     PROCESS_END();
 }
-/*--------------------------------------------------------------------------------------*/
-
 /*--------------------------------------------------------------------------------------*/
