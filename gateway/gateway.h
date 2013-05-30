@@ -50,3 +50,4 @@
 #define IC2_ADDR_W 0b01001110
 
 static int set_control(uint8_t output);
+static uint8_t log2(uint8_t n);
