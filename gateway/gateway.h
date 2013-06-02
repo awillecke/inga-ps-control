@@ -5,7 +5,6 @@
 #include "gyro-sensor.h"
 #include "pressure-sensor.h"
 #include <stdio.h>
-#include "net/rime.h"
 #include "contiki-net.h"
 #include "settings.h"
 #include "node-id.h"
@@ -13,6 +12,7 @@
 #include "avr/portpins.h"
 #include "net/uip-debug.h"
 #include <i2c.h>
+#include "sys/ctimer.h"
 
 #define DEBUG_PRINT 1
 #define DEBUG DEBUG_PRINT

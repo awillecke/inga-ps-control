@@ -30,12 +30,12 @@ static void set_connection_address(uip_ipaddr_t *ipaddr) {
 
 #if MOVEMENT==1
 static uint8_t get_movement() {
-    /*
+    
     uint8_t ret = -1,            
             move = 0;
             
     if(i2c_start(IC1_ADDR_R) == 0) {
-        //i2c_read();
+        i2c_read_ack(&move);
     }
     else {
         printf("i2c_start failed: IC1\n");
@@ -44,8 +44,8 @@ static uint8_t get_movement() {
     i2c_stop();
     
     return move;
-    */
-    return 0;  
+    
+    //return 0;  
 }
 #endif
 /*---------------------------------------------------------------------------*/
@@ -74,7 +74,8 @@ PROCESS_THREAD(default_app_process, ev, data) {
     
     #if MOVEMENT==1
     printf("MOVEMENT Enabled\n");
-    i2c_init();       
+    i2c_init();
+    //get_movement();       
     #endif
 
     printf("CONTROL: %d Button_byte: %d\n", CONTROL, button_byte);    
@@ -100,7 +101,7 @@ PROCESS_THREAD(default_app_process, ev, data) {
             y_acc = acc_sensor.value(ACC_Y_RAW);
             if (y_acc > 380) { 
                 printf("trigger");
-                udp_send_data((uint8_t)CONTROL);
+                udp_send_data(1 << ((uint8_t)CONTROL));
                 etimer_set(&timer, CLOCK_SECOND*0.1);
             }
         }
