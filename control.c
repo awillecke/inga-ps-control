@@ -16,9 +16,9 @@ static struct uip_udp_conn *client_conn;
 
 /*---------------------------------------------------------------------------*/
 static void udp_send_data(uint8_t data) {
-    char buffer[2];
+    char buffer[4];
      itoa(data,buffer,10);
-     uip_udp_packet_send(client_conn, buffer, 2/*strlen(buf)*/);
+     uip_udp_packet_send(client_conn, buffer, 4/*strlen(buf)*/);
      printf("Sende Daten: %s\n", buffer);
 }
 /*---------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ static uint8_t get_movement() {
             move = 0;
             
     if(i2c_start(IC1_ADDR_R) == 0) {
-        i2c_read_ack(&move);
+        i2c_read_nack(&move);
     }
     else {
         printf("i2c_start failed: IC1\n");
@@ -43,9 +43,7 @@ static uint8_t get_movement() {
 
     i2c_stop();
     
-    return move;
-    
-    //return 0;  
+    return move ^ 0b11111111; 
 }
 #endif
 /*---------------------------------------------------------------------------*/
@@ -85,26 +83,29 @@ PROCESS_THREAD(default_app_process, ev, data) {
     while (1) { 
         PROCESS_YIELD();
         if ( etimer_expired(&timer) ) {
-            etimer_set(&timer, CLOCK_SECOND*0.05);
             
             #if MOVEMENT==1
             movement_byte = get_movement();
             
+            //printf("mov_byte: %d\n", movement_byte);
+            
             if (old_movement != movement_byte) {
-                udp_send_data(movement_byte |= (1 << MOVE_CONTROL));
-                etimer_set(&timer, CLOCK_SECOND*0.1);
+                udp_send_data((movement_byte | (1 << MOVE_CONTROL)));
             }
             
             old_movement = movement_byte;
+            
             #endif
             
             y_acc = acc_sensor.value(ACC_Y_RAW);
+            
             if (y_acc > 380) { 
                 printf("trigger");
-                udp_send_data(1 << ((uint8_t)CONTROL));
-                etimer_set(&timer, CLOCK_SECOND*0.1);
+                uint8_t tmp = 1 << CONTROL;
+                udp_send_data(tmp);
             }
         }
+        etimer_set(&timer, CLOCK_SECOND*0.05);
     }
     PROCESS_END();
 }
