@@ -717,15 +717,14 @@ http://www.semiconductors.philips.com/acrobat_download/datasheets/PCF8574_4.pdf<
 <junction x="81.28" y="55.88"/>
 <junction x="81.28" y="53.34"/>
 <junction x="68.58" y="71.12"/>
-<wire x1="68.58" y1="71.12" x2="33.02" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="33.02" y1="71.12" x2="33.02" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="71.12" x2="25.4" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="71.12" x2="25.4" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="IC1" gate="G$1" pin="VDD"/>
-<wire x1="33.02" y1="33.02" x2="50.8" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="33.02" x2="50.8" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="S1" gate="1" pin="P"/>
 <wire x1="35.56" y1="0" x2="35.56" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="-5.08" x2="25.4" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="-5.08" x2="25.4" y2="33.02" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="33.02" x2="33.02" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="S2" gate="1" pin="P"/>
 <wire x1="50.8" y1="0" x2="50.8" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="-5.08" x2="35.56" y2="-5.08" width="0.1524" layer="91"/>
@@ -735,7 +734,7 @@ http://www.semiconductors.philips.com/acrobat_download/datasheets/PCF8574_4.pdf<
 <pinref part="S4" gate="1" pin="P"/>
 <wire x1="81.28" y1="0" x2="81.28" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="-5.08" x2="66.04" y2="-5.08" width="0.1524" layer="91"/>
-<junction x="33.02" y="33.02"/>
+<junction x="25.4" y="33.02"/>
 <junction x="35.56" y="-5.08"/>
 <junction x="50.8" y="-5.08"/>
 <junction x="66.04" y="-5.08"/>

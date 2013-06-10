@@ -20,9 +20,9 @@
 #define CIRCLE 1
 #define TRIANGLE 2
 #define SQUARE 3
-//#define START 4
-//#define SELECT 5
-//#define BUTTON_6 6
+#define START 4
+#define SELECT 5
+#define AN 6
 #define MOVE_CONTROL 7
  
 
@@ -31,12 +31,13 @@
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
-#define START 4
-#define SELECT 5
-//#define R1 6
-//#define R2 7
+#define L1 4
+#define L2 5
+#define STATE 6
 
 
 //                 fest A  R/W
 //                 |--||-|  |
 #define IC1_ADDR_R 0b01000001
+
+static uint8_t log_2(uint8_t n);
