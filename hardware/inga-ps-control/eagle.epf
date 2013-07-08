@@ -343,7 +343,7 @@ UsedLibrary="/home/goldstein/eagle-6.4.0/lbr/zilog.lbr"
 
 [Win_1]
 Type="Control Panel"
-Loc="1280 52 1879 451"
+Loc="680 52 1279 451"
 State=1
 Number=0
 
