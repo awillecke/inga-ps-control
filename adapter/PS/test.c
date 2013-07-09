@@ -44,18 +44,6 @@ uint16_t EEMEM rapidFireResetArray[NUMBER_OF_INPUTS]; /* = {10, 20, 30, 40, 50, 
 											 1900, 2000, 2100, 2200, 2300, 2400,
 											 2500, 2600, 2700, 2800, 2900, 3000,
 											 3100, 3200, 3300, 3400, 3500, 3600};*/
-#define RAPID_FIRE_PRESS_CUTOFF 5
-#define RAPID_FIRE_MIN 0
-#define RAPID_FIRE_MAX 130
-
-
-// This function initializes the button setup, turning on pull-up resistors
-//  for buttons and outputting the proper power levels on the Joy+ and Joy- pins
-void initPins(void){
-	#ifdef December2011Board
-	#endif
-}
-
 
 // Read digital pin macro.  Returns 1 if the pin is LOW, 0 if the pin is HIGH
 //  This is because all our digital pins are pulled up high
@@ -97,29 +85,6 @@ void setLockingArray(void){
 		}
 	}
 }	
-
-// This function cycles through all the physical buttons and uses
-//  that data to apply a rapid-fire functionality to them by
-//  selectively 'turning off' button presses
-void applyRapidFire(void){
-	for (uint8_t i = 0; i < NUMBER_OF_INPUTS; i++){
-		// If the button isn't pressed, set it up to press next time
-		if (*buttonArray[i] == 0)
-			rapidFireArray[i] = RAPID_FIRE_PRESS_CUTOFF;
-		if ((*buttonArray[i] == 1) && (rapidFireArray[i] > 0)){
-			rapidFireArray[i]--;
-			// Turn off the button some of the time
-			if (rapidFireArray[i] > RAPID_FIRE_PRESS_CUTOFF)
-				*buttonArray[i] = 0;
-		}
-		// If rapidFireArray is at zero for that button,
-		//  reset the rapid fire timer for that button
-		else if (rapidFireArray[i] == 0) {
-			rapidFireArray[i] = eeprom_read_word(&rapidFireResetArray[i]);
-		}
-	
-	}	
-}
 
 // This function applies a map to the data, turning the data from
 //  the physical buttons to virtual buttons
@@ -201,7 +166,6 @@ dataForController_t buttonListToDataForController(physicalButtonList_t btnList){
 int main(void) {
 	// First things first.  If we're holding certain buttons on plug-in,
 	// then reset
-	initPins();
 	readButtons();
 	wdt_disable();
 	// set for 16 MHz clock
@@ -241,10 +205,7 @@ int main(void) {
 		if (eeprom_read_word(&rapidFireResetArray[i]) > RAPID_FIRE_MAX)
 			eeprom_write_word(&rapidFireResetArray[i], RAPID_FIRE_MIN);
 	}
-	
-	
-	startWiiCommunication();
-	
+		
 	while (1) {
 		// Next, we need to read the physical buttons and store them into an abstract
 		//  representation of what physical buttons are being held
