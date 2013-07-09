@@ -4,7 +4,7 @@
 #include <avr/eeprom.h>
 #include "dataForController_t.h"
 #include "physicalButtonList_t.h"
-#include "PS2/PS2interface.h"
+#include "PS2interface.h"
 
 #define CPU_PRESCALE(n)	(CLKPR = 0x80, CLKPR = (n))
 // Divide this by 10 to get the number of ms to wait while the programming
