@@ -1,26 +1,26 @@
 #include "main.h"
 
 //ablage der daten für controller interface
-physicalButtonList_t buttonList;
+//physicalButtonList_t buttonList;
 
 //i2cdatamit Werten füllen, die der Master auslesen und ändern kann
-i2cdata[CONTROL]=0;
-i2cdata[MOVEMENT]=0;
+//i2cdata[CONTROL] = 0;
+//i2cdata[MOVEMENT] = 0;
 
-uint8_t* buttonArray[NUMBER_OF_INPUTS];
+/*uint8_t* buttonArray[NUMBER_OF_INPUTS];
 uint8_t EEMEM buttonMapArray[NUMBER_OF_INPUTS];
 uint8_t buttonLockingArray[NUMBER_OF_INPUTS];
 uint8_t EEMEM buttonLockingStorage[NUMBER_OF_INPUTS];
 enum lockState{cantLock, unlocked, lockingPress, locked, unlockingPress};
-
+*/
 
 // Read digital pin macro.  Returns 1 if the pin is LOW, 0 if the pin is HIGH
 //  This is because all our digital pins are pulled up high
-#define readPin(pin, pinNumber) (!( (pin) & (1 << pinNumber) ))
+//#define readPin(pin, pinNumber) (!( (pin) & (1 << pinNumber) ))
 
 void readButtons(void){
     //aus den 2 bytes auswerten	
-	buttonList.startOn = readPin(START_PIN, START);
+/*  buttonList.startOn = readPin(START_PIN, START);
 	buttonList.circleOn = readPin(CIRCLE_PIN, CIRCLE);//(i2cdata[CONTROL] & 0b00000001)
 	buttonList.triangleOn = readPin(TRIANGLE_PIN, TRIANGLE);
 	buttonList.squareOn = readPin(SQUARE_PIN, SQUARE);
@@ -31,8 +31,9 @@ void readButtons(void){
 	buttonList.dpadRightOn = readPin(DPADRIGHT_PIN, DPADRIGHT);
 	buttonList.dpadLeftOn = readPin(DPADLEFT_PIN, DPADLEFT);
 	buttonList.dpadUpOn = readPin(DPADUP_PIN, DPADUP);
+*/
 }
-
+/*
 // This function uses the data from the button presses
 //  to cycle through the locking state of the buttons
 void setLockingArray(void){
@@ -116,12 +117,15 @@ dataForController_t buttonListToDataForController(physicalButtonList_t btnList){
 	dataToSend.triangleOn = btnList.triangleOn;
 	return dataToSend;
 }
-
+*/
 int main (void) {
+
+	i2cdata[CONTROL] = 0;
+	i2cdata[MOVEMENT] = 0;
     
     //TWI als Slave mit Adresse slaveadr starten
     init_twi_slave(SLAVE_ADRESSE);
-    
+/*
   	startPS2Communication();
   	
   	
@@ -150,22 +154,22 @@ int main (void) {
 			buttonLockingArray[i] = eeprom_read_byte(&buttonLockingStorage[i]);
 		
 		// Finally, check the rapid fire data
-		if (eeprom_read_word(&rapidFireResetArray[i]) > RAPID_FIRE_MAX)
-			eeprom_write_word(&rapidFireResetArray[i], RAPID_FIRE_MIN);
+//		if (eeprom_read_word(&rapidFireResetArray[i]) > RAPID_FIRE_MAX)
+//			eeprom_write_word(&rapidFireResetArray[i], RAPID_FIRE_MIN);
 	}
-
+*/
     while(1) {
         // Next, we need to read the physical buttons and store them into an abstract
 		//  representation of what physical buttons are being held
-		readButtons();
+		//readButtons();
 		
 		// After we know what physical buttons are being held, we can map those buttons
 		//  to the output buttons we want to send
-		transformButtonsPressed();
+		//transformButtonsPressed();
 		
 		// Finally, send the data
-		dataForController_t dataToSend = buttonListToDataForController(buttonList);
-		sendPS2Data(dataToSend);
-        //_delay_ms(500);
+		//dataForController_t dataToSend = buttonListToDataForController(buttonList);
+		//sendPS2Data(dataToSend);
+        _delay_ms(500);
     } //end.while
 } //end.main

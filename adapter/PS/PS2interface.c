@@ -32,9 +32,13 @@ along with this.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <avr/io.h>
+//#include <avr/iom8.h>
+#include <stdlib.h>
+
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include "PS2interface.h"
+
 
 /***GLOBAL CONSTANTS & VARIABLES***/
 
@@ -148,8 +152,10 @@ void startPS2Communication(void)
 	setVibrationData(vibrationDataInit);
 
 	// Finally, enable the interrupts to start PS2 communication
-	PCMSK0 = 1; // Enable pin change 0 interrupt
-	PCICR |= 1 << PCIE0;
+	//PCMSK0 = 1; // Enable pin change 0 interrupt
+	//PCICR |= 1 << PCIE0;
+	MCUCR |= (1 << ISC01);
+	MCUCR |= (0 << ISC00);
 	sei();	// Enable global interrupts - we're using the Pin Change 0 interrupt
 }
 
@@ -407,7 +413,7 @@ void communicate(void)
 }
 
 // This interrupt gets called every time Attention changes, and it sends a packet
-ISR(PCINT0_vect){
+ISR(INT0_vect){
 	frameCounter = 0;
 	SPDR = 0xFF;
 	// While ATT is held low, we complete a full packet exhange.

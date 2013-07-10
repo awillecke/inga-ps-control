@@ -49,6 +49,8 @@
 #define IC1_ADDR_W 0b01000000
 #define IC2_ADDR_W 0b01001110
 
+#define MEGA8_I2C_W 0b01010000
+
 static void set_control(void *output_ptr);
 static void unset_control(void *output_ptr);
 

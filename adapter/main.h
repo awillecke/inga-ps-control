@@ -7,8 +7,8 @@
 #include <avr/wdt.h>
 #include <avr/eeprom.h>
 #include "TWI/twislave.h"
-#include "dataForController_t.h"
-#include "physicalButtonList_t.h"
+#include "PS/dataForController_t.h"
+#include "PS/physicalButtonList_t.h"
 #include "PS/PS2interface.h"
 
 #define BAUD 9600 //Baudrate
@@ -18,5 +18,7 @@
 #define MOVEMENT 1
 
 #define CPU_PRESCALE(n)	(CLKPR = 0x80, CLKPR = (n))
+
+
 
 
