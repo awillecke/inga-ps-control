@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = playstaion
+CONTIKI_PROJECT = playstation
 all: $(CONTIKI_PROJECT)
 CFLAGS += -DWITH_NODE_ID=1
 
@@ -13,5 +13,5 @@ CFLAGS += -DIPV6=$(IPV6)
 
 TARGET=inga
 
-CONTIKI = ../../contiki
+CONTIKI = ../../../../Contiki/project-cm-2012-inga-contiki
 include $(CONTIKI)/Makefile.include

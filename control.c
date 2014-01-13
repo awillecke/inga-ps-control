@@ -28,7 +28,8 @@ static void set_connection_address(uip_ipaddr_t *ipaddr) {
     //alt
     //uip_ip6addr(ipaddr,0xfe80,0,0,0,0x3301,0x22ff,0xfe33,0x4455);
     // fe80::b01:22ff:fe33:4455
-    uip_ip6addr(ipaddr,0xfe80,0,0,0,0xb01,0x22ff,0xfe33,0x4455);
+    //uip_ip6addr(ipaddr,0xfe80,0,0,0,0xb01,0x22ff,0xfe33,0x4455);
+    uip_ip6addr(ipaddr,0xfe80,0,0,0,0x3513,0,0,0);
 }
 
 #if MOVEMENT==1

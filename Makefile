@@ -23,5 +23,5 @@ CFLAGS += -DIPV6=$(IPV6)
 
 TARGET=inga
 
-CONTIKI = ../contiki
+CONTIKI = ../../../Contiki/project-cm-2012-inga-contiki
 include $(CONTIKI)/Makefile.include

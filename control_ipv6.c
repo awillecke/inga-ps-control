@@ -58,19 +58,21 @@ static void set_connection_address(uip_ipaddr_t *ipaddr) {
     //    uip_ip6addr(ipaddr,0xfe80,0,0,0,0xe00,0x22ff,0xfe33,0x4455);
     // else
     //    printf("No destiniation!");
-    uip_ip6addr(ipaddr,0xfe80,0,0,0,0x3301,0x22ff,0xfe33,0x4455);
+    //uip_ip6addr(ipaddr,0xfe80,0,0,0,0x3301,0x22ff,0xfe33,0x4455);
+    uip_ip6addr(ipaddr,0xfe80,0,0,0,0x3513,0,0,0);
+
 }
 
 static void print_control() {
-        #if CONTROL == 0 
-        printf("CROSS");  
-        #elif CONTROL == 1
-        printf("CIRCLE");
-        #elif CONTROL == 2
-        printf("TRIANGLE");
-        #elif CONTROL == 3
-        printf("SQUARE"); 
-        #endif
+	#if CONTROL == 0 
+	printf("CROSS");  
+	#elif CONTROL == 1
+	printf("CIRCLE");
+	#elif CONTROL == 2
+	printf("TRIANGLE");
+	#elif CONTROL == 3
+	printf("SQUARE"); 
+	#endif
 }
 /*---------------------------------------------------------------------------*/
 
